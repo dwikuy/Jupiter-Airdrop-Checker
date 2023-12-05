@@ -26,10 +26,22 @@ async function fetchData(wallet) {
   }
 }
 
-// Loop melalui setiap wallet
+// Fungsi untuk mengambil data dari API dengan delay 10 detik
+function fetchDataWithDelay(wallet, delay) {
+  return new Promise(resolve => {
+    setTimeout(async () => {
+      await fetchData(wallet);
+      resolve();
+    }, delay);
+  });
+}
+
+// Loop melalui setiap wallet dengan delay 10 detik
 async function main() {
+  const delayMs = 5000; // Delay dalam milidetik (10 detik)
+
   for (const wallet of wallets) {
-    await fetchData(wallet);
+    await fetchDataWithDelay(wallet, delayMs);
   }
 
   // Simpan data yang memenuhi kriteria ke dalam file isi.txt
