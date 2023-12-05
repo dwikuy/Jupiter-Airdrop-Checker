@@ -19,7 +19,9 @@ async function fetchDataWithDelay(wallet) {
     const data = response.data;
 
     if (data.tokens_final && parseInt(data.tokens_final) > 1) {
-      filteredData.push(`Owner: ${data.owner}, Tokens Final: ${data.tokens_final}`);
+      const balance = `Balance: ${data.tokens_final}`;
+      console.log(`Wallet: ${wallet}, ${balance}`);
+      filteredData.push(`Wallet: ${wallet}, ${balance}`);
       fs.writeFileSync('isi.txt', filteredData.join('\n'));
     }
   } catch (error) {
