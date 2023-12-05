@@ -10,8 +10,8 @@ const apiBaseUrl = 'https://airdrop-api.jup.ag/allocation/';
 // Inisialisasi array untuk menyimpan data yang memenuhi kriteria
 const filteredData = [];
 
-// Fungsi untuk mengambil data dari API
-async function fetchData(wallet) {
+// Fungsi untuk mengambil data dari API dengan delay
+async function fetchDataWithDelay(wallet) {
   try {
     const apiUrl = `${apiBaseUrl}${wallet}`;
     console.log(`Mengambil data untuk wallet: ${wallet}`);
@@ -20,32 +20,21 @@ async function fetchData(wallet) {
 
     if (data.tokens_final && parseInt(data.tokens_final) > 1) {
       filteredData.push(`Owner: ${data.owner}, Tokens Final: ${data.tokens_final}`);
+      fs.writeFileSync('isi.txt', filteredData.join('\n'));
     }
   } catch (error) {
     console.error(`Gagal mendapatkan data untuk wallet: ${wallet}`);
   }
 }
 
-// Fungsi untuk mengambil data dari API dengan delay 10 detik
-function fetchDataWithDelay(wallet, delay) {
-  return new Promise(resolve => {
-    setTimeout(async () => {
-      await fetchData(wallet);
-      resolve();
-    }, delay);
-  });
-}
-
-// Loop melalui setiap wallet dengan delay 10 detik
+// Loop melalui setiap wallet dengan delay 5 detik
 async function main() {
-  const delayMs = 5000; // Delay dalam milidetik (10 detik)
+  const delayMs = 5000; // Delay dalam milidetik (5 detik)
 
   for (const wallet of wallets) {
-    await fetchDataWithDelay(wallet, delayMs);
+    await fetchDataWithDelay(wallet);
+    await new Promise(resolve => setTimeout(resolve, delayMs)); // Delay 5 detik
   }
-
-  // Simpan data yang memenuhi kriteria ke dalam file isi.txt
-  fs.writeFileSync('isi.txt', filteredData.join('\n'));
 }
 
 main();
